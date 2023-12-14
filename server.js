@@ -26,7 +26,7 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 const corsOptions = {
-    origin: "http://localhost:5173", // Remplacez-le par l'URL de votre application front-end
+    origin: "https://stand-pizza.online/", // Remplacez-le par l'URL de votre application front-end
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 };
@@ -44,7 +44,7 @@ app.use(express.json());
 // Configurer CORS pour Socket.IO et Express
 app.use(
     cors({
-        origin: "http://localhost:5173", // Remplacez-le par l'URL de votre application front-end
+        origin: "https://stand-pizza.online/", // Remplacez-le par l'URL de votre application front-end
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true,
     })
