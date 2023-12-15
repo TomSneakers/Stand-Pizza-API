@@ -59,7 +59,7 @@ const io = new Server(server, {
 });
 
 app.use("*", async (req, res, next) => {
-    if(database && collection && pizzaCollection) {
+    if (database && collection && pizzaCollection) {
         next();
     }
     else {
@@ -68,7 +68,7 @@ app.use("*", async (req, res, next) => {
     }
 });
 
-app.get("/uploads:filename", async (req, res) => {
+app.get("/uploads/:filename", async (req, res) => {
     try {
         const filename = req.params.filename;
         res.header["Content-Type"] = "image/png";
