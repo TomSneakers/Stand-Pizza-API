@@ -33,6 +33,7 @@ let database;
 let collection;
 let pizzaCollection;
 
+const startServer = async () => {
     await client.connect();
     console.log("Connexion à la base de données établie avec succès");
     database = client.db("Stand-pizza");
@@ -45,6 +46,7 @@ let pizzaCollection;
     changeStream.on("change", (change) => {
         io.emit("dataChange", change);
     });
+};
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -54,6 +56,16 @@ const io = new Server(server, {
         credentials: true,
         transports: ['websocket', 'polling'],
     },
+});
+
+app.use("*", async (req, res, next) => {
+    if(database && collection && pizzaCollection) {
+        next();
+    }
+    else {
+        await startServer();
+        next();
+    }
 });
 
 app.get("/api/data", async (req, res) => {
@@ -66,16 +78,6 @@ app.get("/api/data", async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la récupération des données" });
     }
 });
-
-app.get("/api/healthcheck/mongo", async (req, res) => {
-    try {
-        client.
-        res.json({ message: client.isConnected() });
-    } catch (error) {
-        console.error("Erreur lors de la connexion à MongoDB :", error);
-        res.status(500).send(error)
-    }
-})
 
 app.post("/api/place-order", async (req, res) => {
     try {
