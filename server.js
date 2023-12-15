@@ -74,7 +74,7 @@ const startServer = async () => {
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: "https://stand-pizza.online/",
         methods: ["GET", "POST"],
         credentials: true,
         transports: ['websocket', 'polling'],
@@ -218,6 +218,6 @@ app.put("/api/toggle-payment/:id", async (req, res) => {
 });
 
 // Utilisez le même serveur HTTP pour Express et Socket.IO
-server.listen(3001, () => {
-    console.log("Serveur API en cours d'exécution sur le port 3001");
+server.listen(80, () => {
+    console.log("Serveur API en cours d'exécution sur le port 80");
 });
