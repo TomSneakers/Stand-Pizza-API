@@ -76,8 +76,7 @@ app.get("/api/healthcheck/mongo", async (req, res) => {
     
         res.json({ message: client.isConnected() });
     } catch (error) {
-        console.error("Erreur lors de la connexion à MongoDB :", error);
-        res.status(500).json(error);
+        res.status(500).json({error, test: "test"});
     }
 })
 
