@@ -71,6 +71,16 @@ app.get("/api/data", async (req, res) => {
     }
 });
 
+app.get("/api/healthcheck/mongo", async (req, res) => {
+    try {
+    
+        res.json({ message: client.isConnected() });
+    } catch (error) {
+        console.error("Erreur lors de la connexion à MongoDB :", error);
+        res.status(500).json({ error: "Erreur lors de la connexion à MongoDB" });
+    }
+})
+
 app.post("/api/place-order", async (req, res) => {
     try {
         const { firstName, deliveryTime, orderItems } = req.body;
