@@ -33,7 +33,6 @@ let database;
 let collection;
 let pizzaCollection;
 
-const startServer = async () => {
     await client.connect();
     console.log("Connexion à la base de données établie avec succès");
     database = client.db("Stand-pizza");
@@ -46,7 +45,7 @@ const startServer = async () => {
     changeStream.on("change", (change) => {
         io.emit("dataChange", change);
     });
-};
+
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -181,5 +180,7 @@ app.put("/api/toggle-payment/:id", async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la mise à jour du statut de paiement" });
     }
 });
+
+
 
 module.exports = app;
