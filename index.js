@@ -68,7 +68,7 @@ app.use("*", async (req, res, next) => {
     }
 });
 
-app.get("/uploads/:filename", async (req, res) => {
+app.get("/api/uploads/:filename", async (req, res) => {
     try {
         const filename = req.params.filename;
         res.header["Content-Type"] = "image/png";
