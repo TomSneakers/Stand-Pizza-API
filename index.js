@@ -33,6 +33,7 @@ let database;
 let collection;
 let pizzaCollection;
 
+const startServer = async () => {
     await client.connect();
     console.log("Connexion à la base de données établie avec succès");
     database = client.db("Stand-pizza");
@@ -45,7 +46,7 @@ let pizzaCollection;
     changeStream.on("change", (change) => {
         io.emit("dataChange", change);
     });
-
+};
 
 const server = createServer(app);
 const io = new Server(server, {
