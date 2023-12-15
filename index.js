@@ -68,9 +68,9 @@ app.use("*", async (req, res, next) => {
     }
 });
 
-app.get("/uploads/:filename", async (req, res) => {
+app.get("/uploads", async (req, res) => {
     try {
-        const filename = req.params.filename;
+        const filename = req.query.filename;
         res.header["Content-Type"] = "image/png";
         res.sendFile(__dirname + "/uploads/" + filename);
     } catch (error) {
