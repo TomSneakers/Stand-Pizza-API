@@ -69,7 +69,17 @@ app.use("*", async (req, res, next) => {
 });
 
 app.get("/uploads", async (req, res) => {
-    res.status(200).send()
+    try {
+        const filename = req.query.file;
+        if (filename) {
+            res.header["Content-Type"] = "image/png";
+            res.sendFile(__dirname + "/uploads/" + filename);
+        }
+        res.status(403).send("No file spécified")
+    } catch (error) {
+        console.error("Erreur lors de la récupération du fichier :", error);
+        res.status(500).json({ error: "Erreur lors de la récupération du fichier" });
+    }
 });
 
 app.get("/api/data", async (req, res) => {
