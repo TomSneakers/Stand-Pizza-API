@@ -13,6 +13,7 @@ const upload = multer({
     }),
 });
 
+
 const { MongoClient } = require("mongodb");
 const { ObjectId } = require("mongodb");
 const cors = require("cors");
@@ -125,7 +126,7 @@ app.post('/api/add-pizza', upload.single('logo'), async (req, res) => {
         const { name } = req.body;
 
         if (!req.file) {
-            throw new Error("Aucun fichier n'a été téléchargé.");
+            throw new Error("No file was uploaded.");
         }
 
         const logo = req.file.filename;
@@ -137,12 +138,13 @@ app.post('/api/add-pizza', upload.single('logo'), async (req, res) => {
 
         await pizzaCollection.insertOne(pizzaDocument);
 
-        res.status(200).json({ message: 'Pizza ajoutée avec succès' });
+        res.status(200).json({ message: 'Pizza added successfully', pizza: pizzaDocument });
     } catch (error) {
-        console.error("Erreur lors de l'ajout de la pizza :", error);
-        res.status(500).json({ error: error.message || "Erreur lors de l'ajout de la pizza" });
+        console.error("Error adding pizza:", error);
+        res.status(500).json({ error: error.message || "Error adding pizza" });
     }
 });
+
 
 app.get("/api/pizza-logos", async (req, res) => {
     try {
