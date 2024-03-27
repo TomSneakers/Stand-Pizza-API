@@ -25,7 +25,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const uri = "mongodb+srv://tomdesvignes031:W1q5VQtTqcTdJEHK@stand-pizza.d2y0rsl.mongodb.net/";
+// const uri = "mongodb+srv://tomdesvignes031:W1q5VQtTqcTdJEHK@stand-pizza.d2y0rsl.mongodb.net/";
+const uri = "mongodb+srv://tomdesvignes031:3BAq8uH*nkCx8N#@stand-pizza.d2y0rsl.mongodb.net/";
 
 const client = new MongoClient(uri, {});
 
@@ -183,7 +184,7 @@ app.delete("/api/delete-all-orders", async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la suppression de toutes les commandes" });
     }
 });
-//comment
+
 app.delete("/api/delete-order/:id", async (req, res) => {
     const orderId = req.params.id;
     console.log("Deleting order with ID:", orderId);
