@@ -13,6 +13,7 @@ const upload = multer({
     }),
 });
 
+
 const { MongoClient } = require("mongodb");
 const { ObjectId } = require("mongodb");
 const cors = require("cors");
@@ -24,10 +25,8 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+
 const uri = "mongodb+srv://tomdesvignes031:wh7Emtt4chDKIaJq@stand-pizza.d2y0rsl.mongodb.net/";
-
-
-
 
 const client = new MongoClient(uri, {});
 
@@ -50,11 +49,14 @@ const startServer = async () => {
     });
 };
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://stand-pizza.online');
-    res.header('Access-Control-Allow-Methods', 'GET, POST');
-    res.header('Access-Control-Allow-Credentials', true);
-    next();
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "https://stand-pizza.online/",
+        methods: ["GET", "POST"],
+        credentials: true,
+        transports: ['websocket', 'polling'],
+    },
 });
 
 app.use("*", async (req, res, next) => {
@@ -66,26 +68,6 @@ app.use("*", async (req, res, next) => {
         next();
     }
 });
-
-const server = createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "https://stand-pizza.online",
-        methods: ["GET", "POST"],
-        credentials: true,
-        transports: ['websocket', 'polling'],
-    },
-});
-
-const cors = require('cors');
-
-// Ajoutez ceci après l'initialisation de votre application Express
-app.use(cors({
-    origin: 'https://stand-pizza.online',
-    methods: ['GET', 'POST'], // Ajoutez les méthodes que vous souhaitez autoriser
-    credentials: true, // Activez les échanges de cookies entre le client et le serveur si nécessaire
-}));
-
 
 app.get("/api/uploads/:filename", async (req, res) => {
     try {
@@ -144,7 +126,7 @@ app.post('/api/add-pizza', upload.single('logo'), async (req, res) => {
         const { name } = req.body;
 
         if (!req.file) {
-            throw new Error("Aucun fichier n'a été téléchargé.");
+            throw new Error("No file was uploaded.");
         }
 
         const logo = req.file.filename;
@@ -156,12 +138,13 @@ app.post('/api/add-pizza', upload.single('logo'), async (req, res) => {
 
         await pizzaCollection.insertOne(pizzaDocument);
 
-        res.status(200).json({ message: 'Pizza ajoutée avec succès' });
+        res.status(200).json({ message: 'Pizza added successfully', pizza: pizzaDocument });
     } catch (error) {
-        console.error("Erreur lors de l'ajout de la pizza :", error);
-        res.status(500).json({ error: error.message || "Erreur lors de l'ajout de la pizza" });
+        console.error("Error adding pizza:", error);
+        res.status(500).json({ error: error.message || "Error adding pizza" });
     }
 });
+
 
 app.get("/api/pizza-logos", async (req, res) => {
     try {
@@ -202,21 +185,6 @@ app.delete("/api/delete-all-orders", async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la suppression de toutes les commandes" });
     }
 });
-
-app.delete("/api/delete-order/:id", async (req, res) => {
-    const orderId = req.params.id;
-    console.log("Deleting order with ID:", orderId);
-
-    // Ajouter la logique pour vérifier si la commande existe avant de la supprimer
-    const result = await collection.deleteOne({ _id: new ObjectId(orderId) });
-
-    if (result.deletedCount === 0) {
-        return res.status(404).json({ error: "Command not found" });
-    }
-
-    res.status(200).json({ message: "Order deleted successfully" });
-});
-
 
 app.put("/api/toggle-payment/:id", async (req, res) => {
     try {
