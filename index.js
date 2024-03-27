@@ -26,6 +26,14 @@ app.use(express.json());
 app.use(cors());
 const uri = "mongodb+srv://tomdesvignes031:wh7Emtt4chDKIaJq@stand-pizza.d2y0rsl.mongodb.net/";
 
+const cors = require('cors');
+
+// Ajoutez ceci après l'initialisation de votre application Express
+app.use(cors({
+    origin: 'https://stand-pizza.online',
+    methods: ['GET', 'POST'], // Ajoutez les méthodes que vous souhaitez autoriser
+    credentials: true, // Activez les échanges de cookies entre le client et le serveur si nécessaire
+}));
 
 
 const client = new MongoClient(uri, {});
@@ -118,13 +126,7 @@ app.post("/api/place-order", async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la commande" });
     }
 });
-axios.get('https://stand-pizza-api.vercel.app/api/pizza-logos')
-    .then(response => {
-        console.log(response.data);
-    })
-    .catch(error => {
-        console.log(error.toJSON());
-    });
+
 app.get("/api/pizzas", async (req, res) => {
     try {
         const pizzas = await pizzaCollection.find({}).toArray();
