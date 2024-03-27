@@ -59,7 +59,28 @@ const io = new Server(server, {
     },
 });
 
+app.use("*", async (req, res, next) => {
+    if (database && collection && pizzaCollection) {
+        next();
+    }
+    else {
+        try {
+            // Définir un délai d'attente de 5 secondes
+            const timeout = new Promise((resolve, reject) => {
+                const id = setTimeout(() => {
+                    clearTimeout(id);
+                    reject('Server timeout');
+                }, 5000);
+            });
 
+            await Promise.race([startServer(), timeout]);
+            next();
+        } catch (error) {
+            console.error("Erreur lors de la connexion à la base de données :", error);
+            res.status(500).json({ error: "Erreur lors de la connexion à la base de données" });
+        }
+    }
+});
 
 app.get("/api/uploads/:filename", async (req, res) => {
     try {
