@@ -24,8 +24,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+const uri = "mongodb+srv://tomdesvignes031:W1q5VQtTqcTdJEHK@@stand-pizza.d2y0rsl.mongodb.net/?retryWrites=true&w=majority&appName=stand-pizza";
 
-const uri = "mongodb+srv://tomdesvignes031:W1q5VQtTqcTdJEHK@stand-pizza.d2y0rsl.mongodb.net/";
+// const uri = "mongodb+srv://tomdesvignes031:W1q5VQtTqcTdJEHK@stand-pizza.d2y0rsl.mongodb.net/";
 // const uri = "mongodb+srv://tomdesvignes031:3BAq8uH*nkCx8N#@stand-pizza.d2y0rsl.mongodb.net/";
 
 const client = new MongoClient(uri, {});
