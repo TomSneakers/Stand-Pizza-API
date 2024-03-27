@@ -13,7 +13,6 @@ const upload = multer({
     }),
 });
 
-
 const { MongoClient } = require("mongodb");
 const { ObjectId } = require("mongodb");
 const cors = require("cors");
@@ -126,7 +125,7 @@ app.post('/api/add-pizza', upload.single('logo'), async (req, res) => {
         const { name } = req.body;
 
         if (!req.file) {
-            throw new Error("No file was uploaded.");
+            throw new Error("Aucun fichier n'a été téléchargé.");
         }
 
         const logo = req.file.filename;
@@ -138,13 +137,12 @@ app.post('/api/add-pizza', upload.single('logo'), async (req, res) => {
 
         await pizzaCollection.insertOne(pizzaDocument);
 
-        res.status(200).json({ message: 'Pizza added successfully', pizza: pizzaDocument });
+        res.status(200).json({ message: 'Pizza ajoutée avec succès' });
     } catch (error) {
-        console.error("Error adding pizza:", error);
-        res.status(500).json({ error: error.message || "Error adding pizza" });
+        console.error("Erreur lors de l'ajout de la pizza :", error);
+        res.status(500).json({ error: error.message || "Erreur lors de l'ajout de la pizza" });
     }
 });
-
 
 app.get("/api/pizza-logos", async (req, res) => {
     try {
@@ -185,6 +183,20 @@ app.delete("/api/delete-all-orders", async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la suppression de toutes les commandes" });
     }
 });
+app.delete("/api/delete-order/:id", async (req, res) => {
+    const orderId = req.params.id;
+    console.log("Deleting order with ID:", orderId);
+
+    // Ajouter la logique pour vérifier si la commande existe avant de la supprimer
+    const result = await collection.deleteOne({ _id: new ObjectId(orderId) });
+
+    if (result.deletedCount === 0) {
+        return res.status(404).json({ error: "Command not found" });
+    }
+
+    res.status(200).json({ message: "Order deleted successfully" });
+});
+
 
 app.put("/api/toggle-payment/:id", async (req, res) => {
     try {
