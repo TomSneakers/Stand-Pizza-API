@@ -26,8 +26,7 @@ app.use(express.json());
 app.use(cors());
 const uri = "mongodb+srv://tomdesvignes031:wh7Emtt4chDKIaJq@stand-pizza.d2y0rsl.mongodb.net/";
 
-// const uri = "mongodb+srv://tomdesvignes031:W1q5VQtTqcTdJEHK@stand-pizza.d2y0rsl.mongodb.net/";
-// const uri = "mongodb+srv://tomdesvignes031:3BAq8uH*nkCx8N#@stand-pizza.d2y0rsl.mongodb.net/";
+
 
 const client = new MongoClient(uri, {});
 
@@ -65,8 +64,13 @@ app.use("*", async (req, res, next) => {
         next();
     }
     else {
-        await startServer();
-        next();
+        try {
+            await startServer();
+            next();
+        } catch (error) {
+            console.error("Erreur lors de la connexion à la base de données :", error);
+            res.status(500).json({ error: "Erreur lors de la connexion à la base de données" });
+        }
     }
 });
 
