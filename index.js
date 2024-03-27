@@ -52,32 +52,18 @@ const startServer = async () => {
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://stand-pizza.online",
+        origin: "https://stand-pizza.online/",
         methods: ["GET", "POST"],
         credentials: true,
         transports: ['websocket', 'polling'],
     },
-    // Ajoutez des options de gestion des délais
-    pingTimeout: 60000, // Augmentez le délai d'attente du ping à 60 secondes
-    pingInterval: 25000, // Augmentez l'intervalle de ping à 25 secondes
 });
-
-// Gestionnaire d'erreurs global
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: "Erreur interne du serveur" });
-});
-
-// Gestionnaire d'erreurs pour les délais d'attente
 app.use((req, res, next) => {
-    res.status(504).json({ error: "Délai d'attente dépassé" });
+    res.header('Access-Control-Allow-Origin', 'https://stand-pizza.online');
+    res.header('Access-Control-Allow-Methods', 'GET, POST');
+    res.header('Access-Control-Allow-Credentials', true);
+    next();
 });
-
-// Middleware pour la gestion des erreurs 404
-app.use((req, res, next) => {
-    res.status(404).json({ error: "Ressource non trouvée" });
-});
-
 
 app.use("*", async (req, res, next) => {
     if (database && collection && pizzaCollection) {
