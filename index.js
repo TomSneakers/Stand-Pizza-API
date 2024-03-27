@@ -49,15 +49,6 @@ const startServer = async () => {
     });
 };
 
-const server = createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "https://stand-pizza.online/",
-        methods: ["GET", "POST"],
-        credentials: true,
-        transports: ['websocket', 'polling'],
-    },
-});
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://stand-pizza.online');
     res.header('Access-Control-Allow-Methods', 'GET, POST');
@@ -73,6 +64,16 @@ app.use("*", async (req, res, next) => {
         await startServer();
         next();
     }
+});
+
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "https://stand-pizza.online",
+        methods: ["GET", "POST"],
+        credentials: true,
+        transports: ['websocket', 'polling'],
+    },
 });
 
 
