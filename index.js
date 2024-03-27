@@ -59,18 +59,15 @@ const io = new Server(server, {
     },
 });
 
-io.on("connection", (socket) => {
-    console.log("Nouvelle connexion WebSocket");
-}
-
-);
-
-startServer();
-
-app.get("/api", (req, res) => {
-    res.json({ message: "Hello World" });
-}
-);
+app.use("*", async (req, res, next) => {
+    if (database && collection && pizzaCollection) {
+        next();
+    }
+    else {
+        await startServer();
+        next();
+    }
+});
 
 
 app.get("/api/uploads/:filename", async (req, res) => {
