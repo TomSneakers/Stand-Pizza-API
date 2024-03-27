@@ -118,7 +118,13 @@ app.post("/api/place-order", async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la commande" });
     }
 });
-
+axios.get('https://stand-pizza-api.vercel.app/api/pizza-logos')
+    .then(response => {
+        console.log(response.data);
+    })
+    .catch(error => {
+        console.log(error.toJSON());
+    });
 app.get("/api/pizzas", async (req, res) => {
     try {
         const pizzas = await pizzaCollection.find({}).toArray();
