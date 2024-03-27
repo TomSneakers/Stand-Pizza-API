@@ -183,6 +183,7 @@ app.delete("/api/delete-all-orders", async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la suppression de toutes les commandes" });
     }
 });
+//comment
 app.delete("/api/delete-order/:id", async (req, res) => {
     const orderId = req.params.id;
     console.log("Deleting order with ID:", orderId);
