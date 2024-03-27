@@ -26,14 +26,7 @@ app.use(express.json());
 app.use(cors());
 const uri = "mongodb+srv://tomdesvignes031:wh7Emtt4chDKIaJq@stand-pizza.d2y0rsl.mongodb.net/";
 
-const cors = require('cors');
 
-// Ajoutez ceci après l'initialisation de votre application Express
-app.use(cors({
-    origin: 'https://stand-pizza.online',
-    methods: ['GET', 'POST'], // Ajoutez les méthodes que vous souhaitez autoriser
-    credentials: true, // Activez les échanges de cookies entre le client et le serveur si nécessaire
-}));
 
 
 const client = new MongoClient(uri, {});
@@ -83,6 +76,15 @@ const io = new Server(server, {
         transports: ['websocket', 'polling'],
     },
 });
+
+const cors = require('cors');
+
+// Ajoutez ceci après l'initialisation de votre application Express
+app.use(cors({
+    origin: 'https://stand-pizza.online',
+    methods: ['GET', 'POST'], // Ajoutez les méthodes que vous souhaitez autoriser
+    credentials: true, // Activez les échanges de cookies entre le client et le serveur si nécessaire
+}));
 
 
 app.get("/api/uploads/:filename", async (req, res) => {
